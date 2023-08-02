@@ -1,5 +1,5 @@
 name: arabic_keyboard
-description: "A new Flutter project."
+description: "A Flutter Desktop App based on Lexilogos Keyboard."
 publish_to: 'none'
 version: 0.1.0
 

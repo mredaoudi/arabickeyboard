@@ -14,6 +14,7 @@ class KeyStack extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 20),
           decoration: const BoxDecoration(
             color: Colors.white,
+            borderRadius: BorderRadiusDirectional.all(Radius.circular(10)),
             border: Border(
               top: BorderSide(color: Colors.grey),
               left: BorderSide(color: Colors.grey),
@@ -27,6 +28,7 @@ class KeyStack extends StatelessWidget {
             child: Text(
               arab,
               style: const TextStyle(
+                color: Color(0xFFCC0033),
                 fontSize: 20,
               ),
             ),
@@ -37,6 +39,7 @@ class KeyStack extends StatelessWidget {
           height: 30,
           decoration: const BoxDecoration(
             color: Colors.white,
+            borderRadius: BorderRadiusDirectional.all(Radius.circular(10)),
             border: Border(
               top: BorderSide(color: Colors.grey),
               left: BorderSide(color: Colors.grey),
@@ -48,7 +51,8 @@ class KeyStack extends StatelessWidget {
             child: Text(
               alpha,
               style: const TextStyle(
-                fontWeight: FontWeight.bold,
+                color: Color(0xFF330066),
+                // fontWeight: FontWeight.bold,
               ),
             ),
           ),

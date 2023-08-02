@@ -1,5 +1,7 @@
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'keystack.dart';
+import 'dart:math';
 
 void main() {
   runApp(const MainApp());
@@ -50,11 +52,13 @@ class _MainAppState extends State<MainApp> {
     "I": "ئ",
     "u": "ء",
     " ": " ",
-    ",": "،"
+    ",": "،",
+    "?": "؟",
+    ".": ".",
   };
 
   final _controller = TextEditingController();
-  String alphaText = "";
+  final FocusNode focusNode = FocusNode();
 
   String _convertValue(String value) {
     List word = [];
@@ -87,21 +91,37 @@ class _MainAppState extends State<MainApp> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const Text(
-                  'Arabic Keyboard',
-                  style: TextStyle(fontSize: 20),
+                ButtonBar(
+                  alignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: () async {
+                        await Clipboard.setData(
+                          ClipboardData(text: _controller.text),
+                        );
+                      },
+                      icon: const Icon(Icons.copy),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        _controller.text = "";
+                        focusNode.requestFocus();
+                      },
+                      icon: const Icon(Icons.clear),
+                    )
+                  ],
                 ),
                 const Padding(
                   padding: EdgeInsets.only(bottom: 20),
                 ),
                 TextField(
+                  focusNode: focusNode,
                   cursorWidth: 1,
                   controller: _controller,
                   autofocus: true,
-                  maxLines: 10,
+                  maxLines: 6,
                   keyboardType: TextInputType.multiline,
-                  cursorHeight: 20,
-                  textAlign: TextAlign.right,
+                  cursorHeight: 28,
                   textDirection: TextDirection.rtl,
                   decoration: const InputDecoration(
                     filled: true,
@@ -110,9 +130,13 @@ class _MainAppState extends State<MainApp> {
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                   ),
+                  style: const TextStyle(
+                    fontSize: 28,
+                  ),
                   onChanged: (value) {
-                    int currentOffset = _controller.selection.base.offset;
                     final newValue = _convertValue(value);
+                    int currentOffset =
+                        min(_controller.selection.base.offset, newValue.length);
                     _controller.value = TextEditingValue(
                       text: newValue,
                       selection: TextSelection.fromPosition(
