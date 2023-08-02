@@ -17,22 +17,22 @@ class _MainAppState extends State<MainApp> {
     "a": "ا",
     "b": "ب",
     "t": "ت",
-    "t'": "ث",
+    "ت'": "ث",
     "j": "ج",
     "H": "ح",
     "x": "خ",
     "d": "د",
-    "d'": "ذ",
+    "د'": "ذ",
     "r": "ر",
     "z": "ز",
     "s": "س",
-    "s'": "ش",
+    "س'": "ش",
     "S": "ص",
     "D": "ض",
     "T": "ط",
     "Z": "ظ",
     "g": "ع",
-    "g'": "غ",
+    "ع'": "غ",
     "f": "ف",
     "q": "ق",
     "k": "ك",
@@ -42,14 +42,43 @@ class _MainAppState extends State<MainApp> {
     "h": "ه",
     "w": "و",
     "i": "ي",
-    "h'": "ة",
-    "y": "ى"
+    "ه'": "ة",
+    "y": "ى",
+    "e": "إ",
+    "A": "أ",
+    "o": "ؤ",
+    "I": "ئ",
+    "u": "ء",
+    " ": " ",
+    ",": "،"
   };
+
+  final _controller = TextEditingController();
+  String alphaText = "";
+
+  String _convertValue(String value) {
+    List word = [];
+    List<String> chars = value.split('');
+    String previousChar = "";
+    for (String c in chars) {
+      if (keys.containsValue(previousChar) &&
+          c == "'" &&
+          keys.containsKey("$previousChar'")) {
+        word.removeLast();
+        word.add(keys["$previousChar'"]);
+      } else if (keys.containsKey(c)) {
+        word.add(keys[c]);
+      } else if (keys.values.contains(c)) {
+        word.add(c);
+      }
+      previousChar = c;
+    }
+    return word.join();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      onGenerateTitle: (context) => 'Arabic Keyboard',
       title: "Arabic Keyboard",
       home: Scaffold(
         backgroundColor: const Color.fromARGB(255, 220, 220, 220),
@@ -62,22 +91,39 @@ class _MainAppState extends State<MainApp> {
                   'Arabic Keyboard',
                   style: TextStyle(fontSize: 20),
                 ),
-                const Padding(padding: EdgeInsets.only(bottom: 20)),
-                const TextField(
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 20),
+                ),
+                TextField(
+                  cursorWidth: 1,
+                  controller: _controller,
+                  autofocus: true,
                   maxLines: 10,
                   keyboardType: TextInputType.multiline,
                   cursorHeight: 20,
                   textAlign: TextAlign.right,
                   textDirection: TextDirection.rtl,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
                     contentPadding: EdgeInsets.all(20.0),
                     enabledBorder: InputBorder.none,
                     focusedBorder: InputBorder.none,
                   ),
+                  onChanged: (value) {
+                    int currentOffset = _controller.selection.base.offset;
+                    final newValue = _convertValue(value);
+                    _controller.value = TextEditingValue(
+                      text: newValue,
+                      selection: TextSelection.fromPosition(
+                        TextPosition(offset: currentOffset),
+                      ),
+                    );
+                  },
                 ),
-                const Padding(padding: EdgeInsets.only(bottom: 20)),
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 20),
+                ),
                 Wrap(
                   alignment: WrapAlignment.center,
                   spacing: 20,
